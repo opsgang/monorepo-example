@@ -1,0 +1,33 @@
+{
+  "root": true,
+  "extends": "airbnb-base",
+  "rules": {
+    "curly": [
+      "error",
+      "all"
+    ],
+    "import/order": [
+      "error"
+    ],
+    "max-len": [
+      "error",
+      140,
+      2,
+      {
+        "ignoreUrls": true,
+        "ignoreComments": false,
+        "ignoreTemplateLiterals": true
+      }
+    ],
+    "sort-keys": [
+      "error",
+      "asc",
+      {
+        "caseSensitive": false
+      }
+    ]
+  },
+  "env": {
+    "node": true
+  }
+}

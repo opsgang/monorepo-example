@@ -1,0 +1,34 @@
+{
+  "name": "@opsgang/monorepo-example-node",
+  "version": "1.0.0",
+  "description": "Monorepo example package for Node.js",
+  "main": "bin/server",
+  "scripts": {
+    "start": "node .",
+    "build": "npm run build:docker",
+    "build:docker": "./.ci/build.sh",
+    "publish": "npm run build",
+    "deploy": "./scripts/deploy.sh",
+    "lint": "eslint .",
+    "precommit": "lint-staged",
+    "precommit:lint": "eslint",
+    "precommit:lint:json": "jsonlint"
+  },
+  "precommit": [
+    "precommit"
+  ],
+  "lint-staged": {
+    "**/*.(js|jsx)": [
+      "npm run precommit:lint",
+      "npm test"
+    ],
+    "**/*.json": [
+      "npm run precommit:lint:json"
+    ]
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@opsgang/monorepo-example-go-example": "1.0.0"
+  }
+}

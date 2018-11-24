@@ -1,0 +1,63 @@
+{
+  "name": "@opsgang/monorepo-example",
+  "version": "1.0.0",
+  "description": "Example monorepo build using Lerna",
+  "main": "./",
+  "engines": {
+    "node": ">=10.*"
+  },
+  "scripts": {
+    "build": "lerna run build",
+    "omega-build": "./.scripts/monorepo-build.sh",
+    "bootstrap": "lerna bootstrap --no-ci --ignore-scripts",
+    "clean": "lerna clean",
+    "start": "./.scripts/start.sh",
+    "pretest": "npm run build",
+    "lint:lerna": "eslint **/*.js",
+    "version:install": "npm install --production",
+    "version:master": "npm run version:install && lerna version --conventional-commits --changelog-preset @opsgang/monorepo-example --no-push --yes",
+    "version:pr": "npm run version:install && lerna version --conventional-commits --changelog-preset @opsgang/monorepo-example --no-git-tag-version --no-push --yes"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/newsuk/nu-sun-titan.git"
+  },
+  "keywords": [],
+  "author": "News UK",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/newsuk/nu-sun-titan/issues"
+  },
+  "homepage": "https://github.com/newsuk/nu-sun-titan#readme",
+  "dependencies": {
+    "@commitlint/config-conventional": "7.0.1",
+    "@commitlint/format": "7.0.0",
+    "@commitlint/lint": "7.0.0",
+    "@commitlint/load": "7.0.0",
+    "@commitlint/parse": "7.0.0",
+    "@commitlint/read": "7.0.0",
+    "chalk": "2.4.1",
+    "inquirer": "6.0.0",
+    "lerna": "3.4.0"
+  },
+  "devDependencies": {
+    "concurrently": "3.6.1",
+    "eslint": "4.19.1",
+    "eslint-config-airbnb-base": "13.0.0",
+    "eslint-plugin-import": "2.13.0",
+    "husky": "1.1.2",
+    "package-change-checker": "1.1.0"
+  },
+  "optionalDependencies": {
+    "@newsint/conventional-changelog-titan": "./packages/nu-sun-conventional-changelog-titan"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lerna run precommit --concurrency 1 --stream",
+      "prepare-commit-msg": "node githooks/preparecommitmsg",
+      "commit-msg": "node githooks/commitmsg",
+      "post-merge": "./githooks/deps-check.sh",
+      "post-checkout": "./githooks/deps-check.sh"
+    }
+  }
+}
