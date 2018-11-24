@@ -1,11 +1,10 @@
 {
-  "name": "@opsgang/monorepo-example-node-2",
+  "name": "@opsgang/monorepo-example-go",
   "version": "1.0.0",
-  "description": "Monorepo example package for Node.js",
+  "description": "Monorepo example package for Go",
   "scripts": {
-    "start": "node src/server.js",
     "build": "npm run build:docker",
-    "build:docker": "./.ci/build.sh",
+    "build:docker": "./scripts/build.sh",
     "publish": "npm run build",
     "deploy": "./scripts/deploy.sh",
     "lint": "eslint .",
@@ -28,7 +27,5 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "@opsgang/monorepo-example-go-node-component": "1.0.0",
-    "express": "4.16.4"
   }
 }

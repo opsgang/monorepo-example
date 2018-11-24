@@ -7,12 +7,10 @@
     "node": ">=10.*"
   },
   "scripts": {
-    "build": "lerna run build",
-    "omega-build": "./.scripts/monorepo-build.sh",
+    "build": "./scripts/monorepo-build.sh",
     "bootstrap": "lerna bootstrap --no-ci --ignore-scripts",
     "clean": "lerna clean",
     "start": "./.scripts/start.sh",
-    "pretest": "npm run build",
     "lint:lerna": "eslint **/*.js",
     "version:install": "npm install --production",
     "version:master": "npm run version:install && lerna version --conventional-commits --changelog-preset @opsgang/monorepo-example --no-push --yes",
@@ -38,7 +36,7 @@
     "@commitlint/read": "7.0.0",
     "chalk": "2.4.1",
     "inquirer": "6.0.0",
-    "lerna": "3.4.0"
+    "lerna": "3.4.3"
   },
   "devDependencies": {
     "concurrently": "3.6.1",

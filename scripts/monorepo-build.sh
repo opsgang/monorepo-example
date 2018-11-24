@@ -5,13 +5,30 @@
 # This file orchestrates the mono repo build process
 ##
 
-set -e
-. ../.env
+set -xe
+. .env
 
 docker_build_runner() {
   local command=$@
-  docker run --rm -v "$HOME/.npm:/home/node/.npm" -v  --user=$UID:$GID "$(pwd):/code" -w /code $DOCKER_NODE_IMAGE_TAG "$command"
+  docker run \
+    --rm \
+    --mount type=bind,source=/var/run/docker.sock,target=/var/run/docker.sock \
+    --mount type=bind,source=$(which docker),target=$(which docker) \
+    -v "${HOME}/.docker/config.json:/root/.docker/config.json" \
+    -v "$HOME/.npm:/home/node/.npm" \
+    -v "$(pwd):/code" \
+    -e BUILD_NUMBER=${BUILD_NUMBER} \
+    -e COMPANY_PACKAGE_PREFIX=${COMPANY_PACKAGE_PREFIX} \
+    -e DOCKER_NODE_IMAGE_TAG=${DOCKER_NODE_IMAGE_TAG}
+    -e GIT_BRANCH=${GIT_BRANCH} \
+    -e MASTER_BRANCH=${MASTER_BRANCH} \
+    -e PATH="/code/node_modules/.bin:${PATH}" \
+    --user=$UID \
+    -w /code $DOCKER_NODE_IMAGE_TAG \
+    ash -c "$command"
 }
+
+docker_build_runner npm install
 
 # Create the Docker config file if it doesn't exist, otherwise Docker will create it as a directory.
 touch ~/.docker/config.json
@@ -55,18 +72,7 @@ else
 fi
 
 # Build and publish the packages that have changed...at the moment these use a build command that needs to be in each packages package.json.
-docker run --rm \
-    --mount type=bind,source=/var/run/docker.sock,target=/var/run/docker.sock \
-    --mount type=bind,source=$(which docker),target=$(which docker) \
-    -v "${HOME}/.docker/config.json:/root/.docker/config.json" \
-    -v "${HOME}/.npm:/root/.npm" \
-    -v "$(pwd):/code" \
-    -w "/code" \
-    -e BUILD_NUMBER=${BUILD_NUMBER} \
-    -e GIT_BRANCH=${GIT_BRANCH} \
-    -e MASTER_BRANCH=${MASTER_BRANCH} \
-    $DOCKER_NODE_IMAGE_TAG \
-    /bin/bash -c \
+docker_build_runner /bin/bash -c \
     "export NODE_ENV=development && npm install && npm run bootstrap && \
     lerna run --scope=${changed_packages} --include-filtered-dependencies publish && \
     lerna run --scope=${changed_packages} --include-filtered-dependencies deploy"
